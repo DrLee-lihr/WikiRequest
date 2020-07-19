@@ -3,5 +3,7 @@
 若查询到页面，将会返回页面名称和链接。若无此页面，则会回复未找到此页面。若HTTP请求失败，则会回复Gamepedia的服务器又丝滑了。
 若查询时出现异常，异常将会被捕获并将Traceback回复给玩家。
 
+注意：该插件依赖requests库，请提前使用`pip install requests`安装该库。
+
 感谢[OasisAkari](https://github.com/OasisAkari)和他的QQ机器人提供了创作灵感。
 感谢[佛冷](https://github.com/Fallen-Breath)的MCDR。~~MCDR是天下第一的服务端守护进程不接受反驳~~
