@@ -12,8 +12,8 @@ PLUGIN_METADATA = {
     'link': 'https://github.com/DrLee-lihr/WikiRequest'
 }
 
-languages_list: list[str] = ['zh:', 'en:', 'cs:', 'de:', 'el:', 'es:', 'fr:', 'hu:', 'it:',
-                             'ja:', 'ko:', 'nl:', 'pl:', 'pt:', 'ru:', 'th:', 'tr:', 'uk:']
+languages_list = ['zh:', 'en:', 'cs:', 'de:', 'el:', 'es:', 'fr:', 'hu:', 'it:',
+                  'ja:', 'ko:', 'nl:', 'pl:', 'pt:', 'ru:', 'th:', 'tr:', 'uk:']
 
 
 @new_thread
