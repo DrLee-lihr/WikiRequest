@@ -10,7 +10,7 @@
 若查询时出现异常，异常将会被捕获并将Traceback回复给玩家。
 
 
-注意：该插件依赖requests库，请提前使用`pip install requests`安装该库。
+注意：该插件依赖requests和json库，请提前使用pip安装。
 
 感谢[OasisAkari](https://github.com/OasisAkari)和他的QQ机器人提供了创作灵感。
 感谢[佛冷](https://github.com/Fallen-Breath)的MCDR。
