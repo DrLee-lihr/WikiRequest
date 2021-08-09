@@ -18,17 +18,23 @@ languages_list = ['zh:', 'en:', 'cs:', 'de:', 'el:', 'es:', 'fr:', 'hu:', 'it:',
 
 @new_thread
 def wiki_request(source: CommandSource, context: dict):
-    name = dict["page_name"]
+    name = context["page_name"]
     link = 'https://minecraft.fandom.com/'
-    if name.startswith(languages_list):
-        language = name[:1]
-        name = name[3:]
-    else:
+    temp2 = True
+    for temp1 in languages_list:
+        if name.startswith(temp1):
+            language = name[:2]
+            name = name[3:]
+            temp2 = False
+        
+    if temp2:
         language = "zh"
-    link = link + language + '/api.php'
+    link = link + language + '/api.php?action=query&prop=info|extracts&inprop=url&redirects&exsentences=1&format=json&titles='+name
     try:
-        r = requests.get(link, params={'action': 'query', 'format': 'json', 'props': 'info|extracts',
-                                       'titles': name, 'redirects': 1, 'exsentences': '1'})
+        print("requesting "+link+' for '+name)
+        r = requests.get(link)
+        print("request finished,Status:"+str(r.status_code))
+        print("result:"+r.text)
         if r.status_code == 200:
             r.encoding = r.apparent_encoding
             result = json.loads(r.text)
@@ -37,44 +43,54 @@ def wiki_request(source: CommandSource, context: dict):
             try:
                 temp = result["query"]["pages"]["-1"]
             except Exception:
-                link = page_info[0]["fullurl"]
-                real_title = page_info[0]["title"]
-                extract = page_info[0]["extract"]
+                page_number = str(page_info)[2:]
+                num = 0
+                for i in page_number:
+                    try:
+                        k = int(i)
+                    except:
+                        break
+                    else:
+                        num = num + 1
+                page_number = page_number[:num]
+                link = page_info[str(page_number)]["fullurl"]
+                real_title = page_info[str(page_number)]["title"]
+                extract = page_info[str(page_number)]["extract"]
                 if real_title != name:
-                    return RTextList(
+                    source.reply(RTextList(
                         RText("您要的", RColor.gray),
                         RText(name, RColor.dark_gray),
                         RText("(重定向到%s)" % real_title, RColor.white),
                         RText("：", RColor.gray),
                         "\n",
-                        RText(link, RColor.dark_blue).c(action=RAction.open_url, value=link),
+                        RText(link, RColor.blue).c(action=RAction.open_url, value=link),
                         "\n",
                         RText(extract, RColor.white)
-                    )
+                    ))
                 else:
-                    return RTextList(
+                    source.reply(RTextList(
                         RText("您要的", RColor.gray),
                         RText(real_title, RColor.dark_gray),
                         RText("：", RColor.gray),
                         "\n",
-                        RText(link, RColor.dark_blue).c(action=RAction.open_url, value=link),
+                        RText(link, RColor.blue).c(action=RAction.open_url, value=link),
                         "\n",
                         RText(extract, RColor.white)
-                    )
+                    ))
             else:
-                return RText("找不到条目。", RColor.red),
+                source.reply(RText("找不到条目。", RColor.red))
 
         else:
-            return RTextList(
+            source.reply(RTextList(
                 RText("发生错误：", RColor.red),
                 RText("请求超时。", RColor.white)
-            )
+            ))
     except:
         except_info = traceback.format_exc()
-        return RTextList(
+        source.reply(RTextList(
             RText("发生错误：", RColor.red),
             RText(except_info, RColor.white)
-        )
+        ))
 
 
 command = Literal("!!wiki").then(
