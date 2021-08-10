@@ -1,6 +1,8 @@
+import re
 import requests
 import json
 import traceback
+from curses.ascii import isdigit
 from mcdreforged.api.all import *
 
 PLUGIN_METADATA = {
@@ -9,7 +11,8 @@ PLUGIN_METADATA = {
     'name': 'Wiki Request Plugin',
     'description': 'A plugin to look up the Minecraft Wiki',
     'author': 'DrLee_lihr',
-    'link': 'https://github.com/DrLee-lihr/WikiRequest'
+    'link': 'https://github.com/DrLee-lihr/WikiRequest',
+    'dependencies': {'mcdreforged': '>=1.0.0'}
 }
 
 languages_list = ['zh:', 'en:', 'cs:', 'de:', 'el:', 'es:', 'fr:', 'hu:', 'it:',
@@ -18,37 +21,33 @@ languages_list = ['zh:', 'en:', 'cs:', 'de:', 'el:', 'es:', 'fr:', 'hu:', 'it:',
 
 @new_thread
 def wiki_request(source: CommandSource, context: dict):
-    name = context["page_name"]
-    link = 'https://minecraft.fandom.com/'
+    name: str = context["page_name"]
+    link = "https://minecraft.fandom.com/"
+    language = 'zh'
     temp2 = True
     for temp1 in languages_list:
         if name.startswith(temp1):
             language = name[:2]
             name = name[3:]
             temp2 = False
-        
-    if temp2:
-        language = "zh"
-    link = link + language + '/api.php?action=query&prop=info|extracts&inprop=url&redirects&exsentences=1&format=json&titles='+name
+    link = link + language + "/api.php?action=query&prop=info|extracts&inprop=url&redirects" + \
+           "&exsentences=1&format=json&titles=" + name
     try:
-        print("requesting "+link+' for '+name)
+        server.logger.info("requesting " + link + ' for ' + name)
         r = requests.get(link)
-        print("request finished,Status:"+str(r.status_code))
-        print("result:"+r.text)
+        server.logger.info("request finished,status:" + str(r.status_code))
+        # server.logger.info("result:" + r.text)
         if r.status_code == 200:
             r.encoding = r.apparent_encoding
             result = json.loads(r.text)
             page_info = result["query"]["pages"]
-
             try:
-                temp = result["query"]["pages"]["-1"]
-            except Exception:
+                temp = page_info["-1"]
+            except IndexError:
                 page_number = str(page_info)[2:]
                 num = 0
                 for i in page_number:
-                    try:
-                        k = int(i)
-                    except:
+                    if not isdigit(i):
                         break
                     else:
                         num = num + 1
@@ -56,6 +55,7 @@ def wiki_request(source: CommandSource, context: dict):
                 link = page_info[str(page_number)]["fullurl"]
                 real_title = page_info[str(page_number)]["title"]
                 extract = page_info[str(page_number)]["extract"]
+                extract = re.sub(r"<.*?>", "", extract)
                 if real_title != name:
                     source.reply(RTextList(
                         RText("您要的", RColor.gray),
@@ -83,7 +83,7 @@ def wiki_request(source: CommandSource, context: dict):
         else:
             source.reply(RTextList(
                 RText("发生错误：", RColor.red),
-                RText("请求超时。", RColor.white)
+                RText("请求出错。", RColor.white)
             ))
     except:
         except_info = traceback.format_exc()
@@ -101,5 +101,3 @@ command = Literal("!!wiki").then(
 def on_load(server: ServerInterface, info: Info):
     server.register_command(command)
     server.register_help_message("!!wiki <pagename>", "查询Minecraft Wiki上的页面。")
-
-
