@@ -1,8 +1,7 @@
-import re
-import requests
 import json
+import re
 import traceback
-from curses.ascii import isdigit
+import requests
 from mcdreforged.api.all import *
 
 PLUGIN_METADATA = {
@@ -47,7 +46,9 @@ def wiki_request(source: CommandSource, context: dict):
                 page_number = str(page_info)[2:]
                 num = 0
                 for i in page_number:
-                    if not isdigit(i):
+                    try:
+                        temp = int(i)
+                    except:
                         break
                     else:
                         num = num + 1
