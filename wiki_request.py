@@ -32,10 +32,9 @@ def wiki_request(source: CommandSource, context: dict):
     link = link + language + "/api.php?action=query&prop=info|extracts&inprop=url&redirects" + \
            "&exsentences=1&format=json&titles=" + name
     try:
-        server.logger.info("requesting " + link + ' for ' + name)
+        print("requesting " + link + ' for ' + name)
         r = requests.get(link)
-        server.logger.info("request finished,status:" + str(r.status_code))
-        # server.logger.info("result:" + r.text)
+        print("request finished,status:" + str(r.status_code))
         if r.status_code == 200:
             r.encoding = r.apparent_encoding
             result = json.loads(r.text)
