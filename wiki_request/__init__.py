@@ -6,12 +6,12 @@ from mcdreforged.api.all import *
 
 PLUGIN_METADATA = {
     'id': 'wiki_request',
-    'version': '2.0.0',
+    'version': '3.0',
     'name': 'Wiki Request Plugin',
     'description': 'A plugin to look up the Minecraft Wiki',
     'author': 'DrLee_lihr',
     'link': 'https://github.com/DrLee-lihr/WikiRequest',
-    'dependencies': {'mcdreforged': '>=2.0.6'}
+    'dependencies': {'mcdreforged': '>=2.0.0'}
 }
 
 interwiki_list = {}
