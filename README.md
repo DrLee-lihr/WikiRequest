@@ -1,11 +1,11 @@
 # WikiRequest
 
 
-**2.x版本已支持，0.x、1.x版本不再提供支持，旧插件保留最后版本，可在`legacy`分支中找到。**
+**2.x版本已支持，0.x、1.x版本不再提供支持，旧插件保留最后版本，可在Releases找到。**
 
 这是一个MCDR插件，可以在游戏中查询任意MediaWiki上的页面。查询内容包括页面名称、链接和extract。
 
-注意：该插件依赖requests库，请提前使用`pip install requests`安装。
+注意：该插件依赖requests库，请提前使用`pip install requests`安装
 
 具体使用方法请在游戏中使用`!!wiki help`获取。
 
