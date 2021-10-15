@@ -1,8 +1,10 @@
 {
 	"id": "wiki_request",
 	"version": "3.0",
-	"name": "Wiki Request Plugin",
-	"description": "A plugin to look up any MediaWiki",
+	"name": "Wiki Request",
+	"description": {
+    "en_us": "A plugin to look up any MediaWiki",
+    "zh_cn": "一个用来查MediaWiki的插件"},
 	"author": "DrLee_lihr",
 	"link": "https://github.com/DrLee-lihr/WikiRequest",
 	"dependencies": {
