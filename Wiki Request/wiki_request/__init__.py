@@ -209,7 +209,7 @@ def on_load(server: PluginServerInterface, info: Info):
     server.register_help_message("!!wiki help", "查询Wiki Request插件的帮助。")
     interwiki_list = \
         server.as_plugin_server_interface().load_config_simple(
-            file_name="interwiki.json", default_config={{"en": "https://minecraft.fandom.com/"}})
+            file_name="interwiki.json", default_config={"en": "https://minecraft.fandom.com/"})
 
 
 def on_user_info(server: PluginServerInterface, info: Info):
