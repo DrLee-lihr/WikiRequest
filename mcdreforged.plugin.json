@@ -1,0 +1,11 @@
+{
+	"id": "wiki_request",
+	"version": "3.0",
+	"name": "Wiki Request Plugin",
+	"description": "A plugin to look up any MediaWiki",
+	"author": "DrLee_lihr",
+	"link": "https://github.com/DrLee-lihr/WikiRequest",
+	"dependencies": {
+		"mcdreforged": ">=2.0.0-alpha.1"
+	}
+}
