@@ -77,7 +77,7 @@ def lookup(source: CommandSource, name: dict, is_regex=False, server: ServerInte
     name = name["page_name"]
     site_link = "https://minecraft.fandom.com/zh/"
     for index in list(interwiki_list.keys()):
-        if name.startswith(index):
+        if name.upper().startswith(index.upper()):
             site_link = interwiki_list[index]
             name = name[len(index) + 1:]
             break
@@ -92,7 +92,7 @@ def lookup(source: CommandSource, name: dict, is_regex=False, server: ServerInte
             r.encoding = r.apparent_encoding
             result: dict = json.loads(r.text)
             page_info: dict = result["query"]["pages"]
-            if "-1" in page_info:
+            if not ("-1" in page_info):
                 page_id = list(page_info.keys())[0]
                 link = page_info[page_id]["fullurl"]
                 real_title = page_info[page_id]["title"]
@@ -104,11 +104,10 @@ def lookup(source: CommandSource, name: dict, is_regex=False, server: ServerInte
                     reply(source, RTextList(RText("(no TextExtracts)")), is_regex, server)
                     extract = ""
                 reply(source, RTextList(RText("您要的", RColor.gray),
-                                        RText(name, RColor.dark_gray)), is_regex, server)
+                                        RText(name, RColor.dark_gray), RText("：", RColor.gray)), is_regex, server)
                 if real_title != name:
                     reply(source, RTextList(RText(f"(重定向到{real_title})", RColor.white)), is_regex, server)
                 reply(source, RTextList(
-                    RText("：", RColor.gray), "\n",
                     RText(link, RColor.blue).c(action=RAction.open_url, value=link), "\n",
                     RText(extract, RColor.white)
                 ), is_regex, server)
@@ -150,8 +149,7 @@ def on_load(server: PluginServerInterface, info: Info):
     server.register_command(iw_redirect)
     server.register_help_message("!!wiki help", "查询Wiki Request插件的帮助。")
     interwiki_list = \
-        server.as_plugin_server_interface().load_config_simple(
-            file_name="interwiki.json", default_config={"en": "https://minecraft.fandom.com/"})
+        server.as_plugin_server_interface().load_config_simple(default_config={"en":"https://minecraft.fandom.com/"})
 
 
 def on_user_info(server: PluginServerInterface, info: Info):
@@ -162,4 +160,5 @@ def on_user_info(server: PluginServerInterface, info: Info):
 
 
 def on_unload(server: ServerInterface):
-    server.as_plugin_server_interface().save_config_simple(config=interwiki_list, file_name="interwiki.json")
+    global interwiki_list
+    server.as_plugin_server_interface().save_config_simple(interwiki_list)
