@@ -75,7 +75,7 @@ def wiki_help(source: CommandSource, context: dict):
 def lookup(source: CommandSource, name: dict, is_regex=False, server: ServerInterface = None):
     global server_interface
     name = name["page_name"]
-    site_link = "https://minecraft.fandom.com/zh/"
+    site_link = "https://zh.minecraft.wiki/"
     for index in list(interwiki_list.keys()):
         if name.upper().startswith(index.upper()):
             site_link = interwiki_list[index]
@@ -149,7 +149,7 @@ def on_load(server: PluginServerInterface, info: Info):
     server.register_command(iw_redirect)
     server.register_help_message("!!wiki help", "查询Wiki Request插件的帮助。")
     interwiki_list = \
-        server.as_plugin_server_interface().load_config_simple(default_config={"en":"https://minecraft.fandom.com/"})
+        server.as_plugin_server_interface().load_config_simple(default_config={"en":"https://minecraft.wiki"})
 
 
 def on_user_info(server: PluginServerInterface, info: Info):
